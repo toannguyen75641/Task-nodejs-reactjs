@@ -11,6 +11,19 @@ router.get('/tasks', (req, res) => {
         })
 });
 
+router.get('/tasks/:id', (req, res) => {
+    db.Task.findAll({
+        where: {
+            id: req.params.id
+        }
+    }).then(tasks => {
+        res.json(tasks)
+    })
+    .catch(err => {
+        res.send('error: ' + err)
+    })
+});
+
 router.post('/tasks', (req, res) => {
     if(!req.body.name) {
         res.status(400);
@@ -21,7 +34,10 @@ router.post('/tasks', (req, res) => {
     else {
         db.Task.create(req.body)
             .then(() => {
-                res.send("Task Added")
+                res.send({
+                    status: 'success',
+                    message: 'Task added successfully'
+                })
             })
             .catch(err => {
                 res.send('error: ' + err)
@@ -45,7 +61,10 @@ router.put('/tasks/:id', (req, res) => {
                 id: req.params.id
             }
         }).then(() => {
-            res.send('Task Edit');
+            res.send({
+                status: 'success',
+                message: 'Task updated successfully'
+            })
         }).catch(err => {
             res.send('error: ' + err)
         })
@@ -58,7 +77,10 @@ router.delete('/tasks/:id', (req, res) => {
             id: req.params.id
         }
     }).then(() => {
-        res.send('Task Delete')
+        res.send({
+            status: 'success',
+            message: 'Task deleted successfully'
+        })
     }).catch(err => {
         res.send('error: ' + err)
     })
