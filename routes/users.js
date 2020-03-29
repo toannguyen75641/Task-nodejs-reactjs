@@ -11,6 +11,19 @@ router.get('/users', (req, res) => {
         })
 });
 
+router.get('/users/:id', (req, res) => {
+    db.User.findAll({
+        where: {
+            id: req.params.id
+        }
+    }).then(tasks => {
+        res.json(tasks)
+    })
+    .catch(err => {
+        res.send('error: ' + err)
+    })
+});
+
 router.post('/users', (req, res) => {
     if(!req.body.name) {
         res.status(400);
@@ -21,7 +34,10 @@ router.post('/users', (req, res) => {
     else {
         db.User.create(req.body)
             .then(() => {
-                res.send("User Added")
+                res.send({
+                    status: 'success',
+                    message: 'User added successfully'
+                })
             })
             .catch(err => {
                 res.send('error: ' + err)
@@ -44,7 +60,10 @@ router.put('/users/:id', (req, res) => {
                 id: req.params.id
             }
         }).then(() => {
-            res.send('User Edit');
+            res.send({
+                status: 'success',
+                message: 'User updated successfully'
+            })
         }).catch(err => {
             res.send('error: ' + err)
         })
@@ -57,7 +76,10 @@ router.delete('/users/:id', (req, res) => {
             id: req.params.id
         }
     }).then(() => {
-        res.send('User Delete')
+        res.send({
+            status: 'success',
+            message: 'User deleted successfully'
+        })
     }).catch(err => {
         res.send('error: ' + err)
     })
